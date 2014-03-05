@@ -5,6 +5,9 @@ A simple to use framework for setting up benchmarks and visualizing results in r
 
 Write performance tests as you would normal unit tests with NUnit (with a little twist) and NUnitBenchmarker will take care of the rest.
 
+
+![NUnitBenchmarker's GUI main screen](docs/img/GUI001.png) 
+
 ## Features
 
 Things NUnitBenchmarker can do for you *by writing simple unit test like code snipets*:
