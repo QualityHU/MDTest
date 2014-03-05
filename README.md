@@ -25,13 +25,6 @@ Things NUnitBenchmarker can do for you *by writing simple unit test like code sn
 - Can run in GUI-less headless mode also
 - Fully configurable by standard .NET configuration section
 
-
-## Building The Solution
-
-You will need Nuget installed on your computer.
-
-The first time you build the solution, Nuget will fetch the required packages. (If it fails to do this you may have to right click on the solution and enable "Nuget Restore".) and then rebuild the solution again. This time it should work.
-
 ## [Getting Started](docs/GettingStarted.md)
 
 To get an instant picture how can you utilize NUnitBenchmarker please read the [Getting Started](docs/GettingStarted.md) section 
@@ -39,7 +32,20 @@ To get an instant picture how can you utilize NUnitBenchmarker please read the [
 ## Roadmap
 
 - Bindings and sample usage for other popular unit test frameworks
+- Nuget package
 - Visual Studio integrated GUI
+
+## Support
+
+You can ask for support on our mailing list: https://groups.google.com/forum/to_be_created
+
+## Contribute
+
+Everyone is encouraged to contribute, either by:
+
+- Submitting pull requests
+- Documentation
+- Blogs and tutorials
 
 ## License
 
