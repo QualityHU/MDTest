@@ -51,4 +51,3 @@ Everyone is encouraged to contribute, either by:
 
 This project is open source and released under the [MIT license.](LICENSE)
 
-Please contribute to make it better ;)
