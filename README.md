@@ -32,7 +32,7 @@ You will need Nuget installed on your computer.
 
 The first time you build the solution, Nuget will fetch the required packages. (If it fails to do this you may have to right click on the solution and enable "Nuget Restore".) and then rebuild the solution again. This time it should work.
 
-## Getting Started
+## [Getting Started](docs/GettingStarted.md)
 
 To get an instant picture how can you utilize NUnitBenchmarker please read the [Getting Started](docs/GettingStarted.md) section 
 
