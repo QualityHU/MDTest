@@ -59,6 +59,7 @@ public void AddTest(ListPerformanceTestCaseConfiguration<int> conf)
 
 	action.Benchmark(conf, "Add", conf.ToString());
 }
+```
 
 * This method above is testing an IList implementation's Add method for different number of items to add.
 * The factory class is ListPerformanceTestFactory its factory method is TestCases
@@ -74,11 +75,6 @@ public class ListPerformanceTestFactory<T>
 
 	public ListPerformanceTestFactory()
 	{
-		// Issue in NUnit: This constructor is called _earlier_ than TestFixtureSetup....
-
-		// It would be ideal if this class would be a Singleton. However this class instantiated
-		// by the runner by calling its public parameterless constructor so we have no way to prevent
-		// multiple instances exist. This will not cause any error, just an optimizaion thing.
 		Implementations = Benchmarker.GetImplementations(typeof(IList<>), true).ToList();
 	}
 		 
@@ -101,36 +97,111 @@ public class ListPerformanceTestFactory<T>
 				Size = 100,
 				DummyForTesting = 0
 			};
-
-			yield return new ListPerformanceTestCaseConfiguration<T>()
-			{
-				Identifier = identifier,
-				TargetImplementationType = implementation,
-				IsLast = false,
-				Size = 1000,
-				DummyForTesting = 0
-			};
-
-
-			yield return new ListPerformanceTestCaseConfiguration<T>()
-			{
-				Identifier = identifier,
-				TargetImplementationType = implementation,
-				IsLast = false,
-				Size = 10000,
-				DummyForTesting = 0
-			};
-
-			yield return new ListPerformanceTestCaseConfiguration<T>()
-			{
-				Identifier = identifier,
-				TargetImplementationType = implementation,
-				IsLast = implementation == lastImplementation,
-				Size = 100000,
-				DummyForTesting = 0
-			};
+			// ...more yields with other TestCaseConfiguration data, for exemple initing Size = 1000 etc
 		}
 	}
 }
+```
+
+* Notice the GetImplementations helper method in your constructor. All the IList implementations will be there
+* what were configures, or loaded from the current folder, or interactively were selectted in the GUI
+* Of course you can use creating, filling, and returning an IEnumerable instead of using yield language feature.
+* Think about the ListPerformanceTestCaseConfiguration class as a communication (or parameter) class for the Add test.
+* You are done. Without configuration all the assemblies will reflected in the current folder, and all IList implementations will be loaded for test. The GUI also will show up.
+
+
+#### Configuring a performance test
+
+NUnitBenchmarker will look for the given interface's implementations (in our sample IList)
+
+- by configuration
+- by convention (using the current folder's all assemblies
+- optionally launches the GUI, where you can load and select more additional implementations
+
+NUnitBenchmarker has its standard .NET configuration section. To use this place the handler declaration to the test assembly's config file
+
+```xml
+<configuration>
+  <configSections>
+    <section name="NUnitBenchmarkerConfigSection" type="NUnitBenchmarker.Benchmark.Configuration.NUnitBenchmarkerConfigurationSection, NUnitBenchmarker.Benchmark"/>
+  </configSections>
+
+  ...
+
+</configuration>
+```
+
+Somewhere below place the configuration data:
+
+
+```xml
+<configuration>
+  <NUnitBenchmarkerConfigSection displayUI="true">
+
+    <SearchFolders>
+      <add Include ="" Exclude="" Folder="." />
+    </SearchFolders>
+
+    <ImplementationFilters>
+      <add Include ="" Exclude="" />
+    </ImplementationFilters> 
+
+    <TestCaseFilters>
+      <add Include ="" Exclude="" />
+    </TestCaseFilters>
+  </NUnitBenchmarkerConfigSection>
+</configuration>
+```
+
+* Set NUnitBenchmarkerConfigSection element displayUI attribute to false if you would like NUnitBenchmarker to run GUI-less haedless mode. 
+You can override this setting by code, see BenchMarker class's GetImplementations(...) method.
+* You can add any number of Folder to search within the SearchFolder element. For each Folder you can define regex filter to include or exclude from the particular folder by file name.
+* Within all the disovered assemblies you can filter the discowered types with multiple regex include and exclude filters. Pleae note the filters are working in the whole type name includeing the namespaces.
+* When the test runtime comes the runner will call your test case factory to create the test cases. Using the TestCaseFilters element you can filter out cases by including or excluding cases by regex name match.
+
+## NUnit issue workarounds
+
+####NUnit issue#1: 
+TestFixtureSetup will run **later** than constructor and factory methods of TestCaseSource....so we are late there
+
+
+We are calling Benchmarker.GetImplementations() to get implementations in the TestCaseSource 
+constructor. GetImplementations will message to UI to get the must updated UI selected/deselcted
+implementations. However GetImplementations will check if Benchmarker has internally filled discovered
+implementations by configuration or by convention. If it is not filled then calls FindImplementations
+and fills and caches this implementation list.  GetImplementation() returns always 
+A + B where:
+A: the lazy discovered (once) (and cached) implementations by configuration or by convention
+B: the actual response from UI
+Note: Both A and B can be empty.
+
+Please note again: We can not use TestFixtureSetup as "Init" logic because of NUnit runner limitation.
+
+
+####NUnit issue#2: 
+
+NUnit runner control flow:
+
+* a) TestCaseSource (ListPerformanceTestFactory)instance constructor is called
+* b) TestCaseSource (ListPerformanceTestFactory) factory method (TestCases()) is called
+* c) ( step a) and b) repeated for all Test methods where [TestCaseSource] attribute was used, **regardless** which Test method was chosen to run. 
+* d) Test class static constructor called
+* e) TestFixtureSetup called
+...
+* f) .... and now the Test methods called
+
+Please note c) and the **regardless**. This means a sideeffect for you: 
+
+If you run an other TestFixture's other test which nothing have to do with this TestCaseSource still, the TestCaseSource constructor and factory method will run as a side effect. 
+
+Happy benchmarking :-)
+
+
+
+
+
+
+
+
 
 
