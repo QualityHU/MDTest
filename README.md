@@ -49,7 +49,7 @@ HTTP could not register URL http://+:8091/NUnitBenchmarker/UIService/. Your proc
 
 Unfortunately the link in the exception text, http://go.microsoft.com/fwlink/?LinkId=70353, is broken. The correct link should be http://msdn.microsoft.com/en-us/library/ms733768.aspx which explains how to set the permissions:
 
-netsh http add urlacl url=http://+:8091/NUnitBenchmarker/UIService/ user=user
+**netsh http add urlacl url=http://+:8091/NUnitBenchmarker/UIService/ user=user**
 
 
 ## Support
