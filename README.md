@@ -1,12 +1,13 @@
 Stockpile Mangement
 ==
 
-A simple to use framework for setting up benchmarks and visualizing results in real time.
+We have a buffer tank that has liquid put into and taken away from it at different points in time. The buffer tank has a min and max limit.
 
-Write performance tests as you would normal unit tests with NUnit (with a little twist) and NUnitBenchmarker will take care of the rest.
+The picture below shows how the levels in the tank change over time.
 
 
-![NUnitBenchmarker's GUI main screen](docs/img/GUI001.png) 
+
+![Tank level over time](docs/img/StockpileManagement.png) 
 
 ## Features
 
