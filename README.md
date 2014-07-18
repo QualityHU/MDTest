@@ -9,7 +9,7 @@ The picture below shows how the levels in the tank change over time:
 ![Tank level over time](docs/img/StockpileManagement.png) 
 
 
-## Aim:
+## Aim
 
 We need a function which will tell us If and when we can add a new filling or consuming operation to the tank so that it does not go over (or under) the max (or min) limit.
 
@@ -23,22 +23,22 @@ The "Result" should have two properties:
 - IsSucess : bool
 - StartTime : DateTime (NOTE: the Result.StartTime may be equal or greater to the startTime supplied to the CheckOperation() method. Part of the challenge of this problem is finding the earliest time we can start the operation without breaching the limits.)
 
-## Parameters:
+## Parameters
 
 - "StartTime": Is the time we would like to start adding the operation to the tank.
 - "Duration": is the duration of the operation
 - "Quantity": is how much liquid will be added to the tank during the whole duration of the operation. (If the value is negative then, liquid will be taken away from the tank.) 
 * "TankLevels": is a collection of points which give you the level in the tank at different times.
 
-## Starter playground:
+## Starter playground
 
-This repository is prepared to jump start the imlpementation. The Visual Studio solution consist of three projects:
+This repository is prepared to jump start to the imlpementation instantly. The Visual Studio solution consist of three projects:
 
 * TankLevels
 * TankLevels.Tests
 * TankLevels.PerformanceTests
 
-**The Tankevels project** 
+**Tankevels project** 
 
 The Tankevels project defines the
 
@@ -50,6 +50,32 @@ It also defines two dummy imlementations for demonstrating how a future implemen
 The two dummy imlementations are:
 * DummyTank
 * OtherDummyTank
+
+**Tankevels.Tests project** 
+
+The Tankevels.Tests project contains the unit test infrastucture and the actual unit tests. Start with reading the detailes summary documentation of the TankLevel class.
+The only dependency of the project is the NuGet NUnit package.
+
+**TankLevels.PerformanceTests project** 
+The Tankevels.Tests project contains the performance test infrastucture and the actual performance tests. 
+The perfomance tests implemented using by the [NunitBenchmarker]https://github.com/Orcomp/NUnitBenchmarker project. Start with the TankPerformanceTests class and run the tests.
+
+To get an instant picture how cool things should happen see the picture below:
+
+![Performance testing](docs/img/nunitbenchmarker.png) 
+
+**Getting the dependencies** 
+All dependency managed by the NuGet package manager.
+The simplest way to get all the dependencies is using the provided RestorePackages.bat in the repository root.
+
+
+
+
+
+
+
+
+
 
 
 
