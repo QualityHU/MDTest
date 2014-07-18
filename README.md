@@ -15,21 +15,45 @@ We need a function which will tell us If and when we can add a new filling or co
 
 The method signature should look something like this:
 
-Result CheckOperation(DateTime startTime, TimeSpan duration, double quantity, TankLevels tankLevels).
+```csharp
+Result CheckOperation(DateTime startTime, TimeSpan duration, double quantity, TankLevels tankLevels);
+```
 
 The "Result" should have two properties:
-- IsSucess :: bool
-- StartTime :: DateTime (NOTE: the Result.StartTime may be equal or greater to the startTime supplied to the CheckOperation() method. Part of the challenge of this problem is finding the earliest time we can start the operation without breaching the limits.)
+- IsSucess : bool
+- StartTime : DateTime (NOTE: the Result.StartTime may be equal or greater to the startTime supplied to the CheckOperation() method. Part of the challenge of this problem is finding the earliest time we can start the operation without breaching the limits.)
 
 ## Parameters:
 
 - "StartTime": Is the time we would like to start adding the operation to the tank.
-
 - "Duration": is the duration of the operation
-
 - "Quantity": is how much liquid will be added to the tank during the whole duration of the operation. (If the value is negative then, liquid will be taken away from the tank.) 
+* "TankLevels": is a collection of points which give you the level in the tank at different times.
 
-- "TankLevels" is a collection of points which give you the level in the tank at different times.
+## Starter playground:
+
+This repository is prepared to jump start the imlpementation. The Visual Studio solution consist of three projects:
+
+* TankLevels
+* TankLevels.Tests
+* TankLevels.PerformanceTests
+
+**The Tankevels project** 
+
+The Tankevels project defines the
+
+* ITank interface with the CheckOperation method.
+* TankLevel entity 
+* CheckOperationResult entity
+
+It also defines two dummy imlementations for demonstrating how a future implementation fits to the unit test and performance test infrastructure
+The two dummy imlementations are:
+* DummyTank
+* OtherDummyTank
+
+
+
+
 
 
 
