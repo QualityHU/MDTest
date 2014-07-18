@@ -1,4 +1,4 @@
-NUnitBenchmarker
+Stockpile Mangement
 ==
 
 A simple to use framework for setting up benchmarks and visualizing results in real time.
