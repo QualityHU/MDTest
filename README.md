@@ -1,33 +1,72 @@
-# SortedSplitList 
+# C5 Intervals Benchmark
 
-## Introduction
-This solution contains performance tests for various sorted data structures.
-The goal of this library is to measure and compare performance of these implementations
-The name comes from the original name of the first data structure under test.
 
-Some implementations may reside (copied) here with source while others just referred as NuGet package or are part of the standard .NET Framework
+## Aim
+
+This project serves as general benchmark repository for C5 Intervals project. To get mor details about C5 Intervals please refer to [Orcomp C5 Intervals project](https://github.com/Orcomp/C5Intervals "Orcomp C5 Intervals project") on GitHub
 
 ## Method
 
-Currently the main focus is on the Add/Remove/Search operations.
-As the implementations under tests does not implement any common interface a simplistic test interface is defined to make testing possible.
-Access to the original functionality happens via a lightweight wrappers.
+Currently the main focus is benchmarking common operations on IIntervalCollection such as:
 
-For performance testing and visualizing results this project uses NunitBenchmarker (https://github.com/Orcomp/NUnitBenchmarker). Start with PerformanceTest classes, run the tests just as you would run any ordinary unit test.
+- Construction
+- Enumeration
+- Find Gaps
+- Find Overlaps By Interval
+- Find Overlaps By Value
+- Highest / Lowest
+- Sorting related operations
 
-
-## Implementations under test
-
-- **SortedSplitList** - This code was taken from article: "SortedSplitList - An Indexing Algorithm in C#" by Aurelien Boudoux. See code for more details
-- **SortedList** - Taken from Orcomp other internal project 'Stockpile' (planned)
-- **SortedList** - .NET Framework (planned)
-- **C5.???** - C5's sorted data structures (planned)
+For performance testing and visualizing results this project uses [NUninBenchmarker project](https://github.com/Orcomp/NUnitBenchmarker "NUninBenchmarker project"). Start with PerformanceTest classes, run the tests just as you would run any ordinary unit test.
 
 
-## Planned
+## Dedicated benchmarks on DoublyLinkedFiniteIntervalTree (DLFIT)
 
-- More operations to test not just Add/Remove/Search
-- More implementations to test
+DLFIT has two special methods what is although defined on the IIntervalCollection interface, DLFIT is the only implementor:
 
+- IEnumerable<I> GetNext(I interval);
+- IEnumerable<I> GetPrevious(I interval);
+
+## Interpreting benchmark results 
+
+For more details please refer to source filee: DlfitTestFactory.cs
+
+The motivation for this dedicated benchmark was the concern about finding the first interval in the internal data stuctures may be slow. As the two target methods were pure read operations the standard Add and Remove operations also involved to see the trade-off and side-effects when introducing redundancy in the internal data structures.
+
+** Add: **
+
+The time we see is the average time of one Add operation while creating a 'size' sized tree.
+The intervals are added in random permutated order (first generating in order count size, then permutate)
+The result shown isdivided by size.
+
+![Performance testing](doc/img/Add.jpg) 
+
+** Remove: **
+
+The time we see is the average time of one Remove operation while removing all intervals from a 'size' sized tree. In the preparation the intervals added in order (this time does not count anyway in the benchmark) but when removing the intervals the order is a random permutation. The result shown is divided by size.
+
+![Performance testing](doc/img/Remove.jpg) 
+
+
+*** GetNetx().FindFirst: ***
+
+GetNext and GetPrevious implementation is lazy. The time we see is the _average_ FindFirst in a 'size' sized tree. All the intervalls searched in the tree, so in a 'size' sized tree it is a 'size' count operation, The order should not matter, but despite of this the searches followed each other in random permutated order.
+The result shown is divided by size.
+
+![Performance testing](doc/img/GetNext_First_Average.jpg) 
+
+
+*** GetNetx().Enumerate All: *** 
+
+The time we see is the _average_ emumeration time in a 'size' sized tree. In all trees 100 picked (full) enumerations performed. The count of enumeration depends on what is the starting point within the tree,
+that's why the 100 repeat with different queries. The result you see is divided by 100.
+
+![Performance testing](doc/img/GetNext_Enumerate_All.jpg) 
+
+*** Conclusion: ***
+
+_GetNetx().FindFirst:_ As it was expected it is something O(log2(size)).(Finding the entry starting interval done by navigating in a binary tree. However it seems to be very fast in the expected size range, and because of log characteristics it will not increase unexpectedly. It will increase less and less percent with bigger sizes.
+
+_GetNetx(). Enumerate All:_ This was also expected: Linear with size, because the returning element count is linear with size. This justifies the hypothesis: We should not worry about the the starting internal find overhead when using GetNext (binary traverse vs hashtable lookup). The find overhead does not even measurable in this case.
 
 
